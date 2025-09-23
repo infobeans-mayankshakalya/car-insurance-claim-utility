@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+pydantic
+alembic
+python-multipart
+xgboost
+scikit-learn
+joblib
+pandas
+tensorflow
+opencv-python-headless
+numpy

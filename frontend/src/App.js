@@ -5,13 +5,14 @@ export default function CarDamageAnalyzer() {
   const [make, setMake] = useState("");
   const [model, setModel] = useState("");
   const [year, setYear] = useState("");
+  const [type, setType] = useState("");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!file || !make || !model || !year) {
+    if (!file || !make || !model || !year || !type) {
       alert("Please fill all fields and select an image");
       return;
     }
@@ -19,14 +20,15 @@ export default function CarDamageAnalyzer() {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("make", make);
-    formData.append("model", model);
+    formData.append("model_name", model);
+    formData.append("vehicle_type", type);
     formData.append("year", year);
 
     setLoading(true);
     try {
       setImagePreview(URL.createObjectURL(file));
 
-      const res = await fetch("http://localhost:8000/inference/local", {
+      const res = await fetch("http://localhost:8000/predict", {
         method: "POST",
         body: formData,
       });
@@ -74,6 +76,13 @@ export default function CarDamageAnalyzer() {
             placeholder="Model"
             value={model}
             onChange={(e) => setModel(e.target.value)}
+            style={{ padding: 10, borderRadius: 6, border: "1px solid #ccc" }}
+          />
+          <input
+            type="text"
+            placeholder="Type"
+            value={type}
+            onChange={(e) => setType(e.target.value)}
             style={{ padding: 10, borderRadius: 6, border: "1px solid #ccc" }}
           />
           <input
@@ -155,7 +164,7 @@ export default function CarDamageAnalyzer() {
                 <strong>Estimated Repair Cost:</strong> ₹{result.cost_estimate}
               </p>
               <p>
-                <strong>Car:</strong> {result.car.make} {result.car.model} ({result.car.year})
+                <strong>Car:</strong> {result.car.make} {result.car.model} {result.car.type} ({result.car.year})
               </p>
             </div>
           </div>

@@ -11,3 +11,4 @@ pandas
 tensorflow
 opencv-python-headless
 numpy
+matplotlib

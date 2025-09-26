@@ -4,16 +4,19 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.metrics import mean_absolute_error
 import joblib
+from sklearn.preprocessing import MinMaxScaler
 
+scaler = MinMaxScaler()
 df = pd.read_csv("synthetic_repairs.csv")
 
 X = df[["make", "model", "year", "damage", "severity"]]
 y = df["cost"]
+y_cost_scaled = scaler.fit_transform(y.reshape(-1,1))
 
 enc = OneHotEncoder(handle_unknown="ignore")
 X_enc = enc.fit_transform(X)
 
-X_train, X_val, y_train, y_val = train_test_split(X_enc, y, test_size=0.2, random_state=42)
+X_train, X_val, y_train, y_val = train_test_split(X_enc, y_cost_scaled, test_size=0.2, random_state=42)
 
 dtrain = xgb.DMatrix(X_train, label=y_train)
 dval = xgb.DMatrix(X_val, label=y_val)
